@@ -1,0 +1,12 @@
+.row
+  .col-md-6.col-md-offset-3
+    %h1 Signup
+.row
+  .col-md-6.col-md-offset-3
+    = simple_form_for @user do |f|
+      = f.input :email, placeholder: 'user@domain.com'
+      = f.input :name
+      = f.input :password
+      = f.input :password_confirmation, label: false
+      = f.button :submit, class: "btn-primary"
+      = link_to 'Cancel', :back
