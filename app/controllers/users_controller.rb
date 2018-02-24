@@ -13,6 +13,7 @@ class UsersController < ApplicationController
     if @user.save
       flash[:notice] = "You have signed up successfully"
       flash[:color] = "valid"
+      session[:user_id] = @user.id
     else
       flash[:notice] = "Form is invalid"
       flash[:color] = "invalid"
@@ -27,6 +28,6 @@ class UsersController < ApplicationController
 
   private
   def user_params
-    permitted = params.require(:user).permit(:email, :name, :password)
+    permitted = params.require(:user).permit(:email, :name, :password, :password_confirmation)
   end
 end

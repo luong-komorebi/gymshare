@@ -8,4 +8,10 @@ Rails.application.routes.draw do
 
   get 'welcome/index'
   root "welcome#index"
+
+  get '/login' => 'session#new'
+  post '/login' => 'session#create'
+  get '/logout' => 'session#destroy'
+
+  get '/signup' => 'users#new'
 end
