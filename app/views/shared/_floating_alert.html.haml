@@ -1,0 +1,10 @@
+- if flash[:error].present?
+  #floating-alert.alert.alert-danger.alert-dismissible.fade.in{role: "alert"}
+    %button{type: 'button', class: 'close', 'data-dismiss' => 'alert', 'aria-label' => 'Close'}
+      %span{'aria-hidden' => 'true'} &times;
+    = flash[:error]
+- elsif flash[:notice].present?
+  #floating-alert.alert.alert-success.alert-dismissible.fade.in{role: "alert"}
+    %button{type: 'button', class: 'close', 'data-dismiss' => 'alert', 'aria-label' => 'Close'}
+      %span{'aria-hidden' => 'true'} &times;
+    = flash[:notice]

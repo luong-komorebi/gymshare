@@ -14,12 +14,14 @@ class UsersController < ApplicationController
       flash[:notice] = "You have signed up successfully"
       flash[:color] = "valid"
       session[:user_id] = @user.id
+      redirect_to user_path(@user)
     else
-      flash[:notice] = "Form is invalid"
+      flash[:error] = "Form is invalid"
       flash[:color] = "invalid"
+      render "new"
     end
 
-    render "new"
+   
   end
 
   def show

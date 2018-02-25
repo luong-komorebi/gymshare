@@ -1,4 +1,5 @@
 class WorkoutPlansController < ApplicationController
+  before_action :authorize, :except => [:index]
 
   def index
     @workout_plans = WorkoutPlan.order("score DESC")
@@ -14,6 +15,7 @@ class WorkoutPlansController < ApplicationController
 
   def create
     @workout_plans = WorkoutPlan.new(workout_plans_params)
+
     if @workout_plans.save
       flash[:notice] = "Plan created successfully"
       flash[:color] = "valid"
@@ -28,6 +30,6 @@ class WorkoutPlansController < ApplicationController
   private
 
   def workout_plans_params
-    params.require(workout_plans).permit()
+    params.require(:workout_plan).permit(:name, :description)
   end
 end
