@@ -1,0 +1,10 @@
+.row
+  .col-md-6.col-md-offset-3
+    %h1 Create new workout plans
+.row
+  .col-md-6.col-md-offset-3
+    = simple_form_for @workout_plans do |w|
+      = w.input :name, placeholder: 'raging thunder workout'
+      = w.input :description, placeholder: 'my plan to become thinner'
+      = w.button :submit, class: "btn-primary"
+      = link_to 'Cancel', :back
