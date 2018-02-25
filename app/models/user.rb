@@ -8,7 +8,7 @@ end
 
 class User < ApplicationRecord
 
-  has_many :exercise
+  has_many :workout_plans
   has_secure_password
 
   validates :email, presence: true, email: true, uniqueness: true

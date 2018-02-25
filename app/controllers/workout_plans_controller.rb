@@ -14,8 +14,8 @@ class WorkoutPlansController < ApplicationController
   end
 
   def create
-    @workout_plans = WorkoutPlan.new(workout_plans_params)
-
+    @workout_plans = current_user.workout_plans.create(workout_plans_params)
+    
     if @workout_plans.save
       flash[:notice] = "Plan created successfully"
       flash[:color] = "valid"
@@ -24,7 +24,7 @@ class WorkoutPlansController < ApplicationController
       flash[:color] = "invalid"
     end
 
-    redirect_to "new"
+    redirect_to workout_plan_path(@workout_plans)
   end
 
   private

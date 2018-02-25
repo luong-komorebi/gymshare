@@ -1,4 +1,4 @@
 class Exercise < ApplicationRecord
   belongs_to :user
-  has_many :round
+  has_many :rounds
 end
