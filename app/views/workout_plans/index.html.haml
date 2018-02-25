@@ -1,4 +1,8 @@
-%h1 All Workout Plans
-
-- @workout_plans.each do | plan |
-  %li= plan
+.row
+  .col-md-6.col-md-offset-3
+    %h1 All Workout Plans
+.row
+  .col-md-6.col-md-offset-3
+    - @workout_plans.each do | plan |
+      %li= plan.name
+      %p= plan.description
