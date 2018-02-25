@@ -1,0 +1,4 @@
+%h4 Add new round
+= simple_form_for [@workout_plans, @round] do |f|
+  = f.input :repitition, as: :integer, label: false, input_html: { min: 0 }
+  = link_to 'Cancel', :back

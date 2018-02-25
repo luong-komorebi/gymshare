@@ -7,6 +7,8 @@ class WorkoutPlansController < ApplicationController
 
   def show
     @workout_plans = WorkoutPlan.find(params[:id])
+    @round = Round.new
+    @round.workout_plan_id = params[:id]
   end
 
   def new

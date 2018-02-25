@@ -4,3 +4,9 @@
 .row
   .col-md-6.col-md-offset-3
     = @workout_plans.description
+.row
+  .col-md-6.col-md-offset-3
+    = render partial: 'workout_plans/round', collection: @workout_plans.rounds
+.row
+  .col-md-6.col-md-offset-3
+    = render partial: 'rounds/form'

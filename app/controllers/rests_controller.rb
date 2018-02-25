@@ -1,0 +1,2 @@
+class RestsController < ApplicationController
+end
