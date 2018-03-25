@@ -1,0 +1,6 @@
+= containing_round.simple_fields_for :exercises do |m|
+  = m.input :name, label: 'Name of the exercise', error: 'Exercise name is mandatory, please specify one'
+  = m.input :description, label: 'Description of the exercise'
+  = m.input :weight, as: :integer, label: 'Weight', input_html: { min: 0 }
+  = m.input :reps, as: :integer, label: 'How many reps', input_html: { min: 0 }
+  = link_to 'Cancel', workout_plans_path

@@ -1,2 +1,6 @@
 .row
   = "#{round.repitition} x Round"
+  - round.exercises.each do |e|
+    = e.name
+    = e.description
+    = e.reps 

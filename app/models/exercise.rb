@@ -1,6 +1,5 @@
 class Exercise < ApplicationRecord
-  belongs_to :user
-  has_many :rounds
+  belongs_to :round
 
   validates :name, presence: true
   validates :description, presence: true
