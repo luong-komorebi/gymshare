@@ -1,5 +1,9 @@
 class RestsController < ApplicationController
   def index
+    @rests= Rest.all
+    respond_to do |format|
+      format.json { render :json => @rests }
+    end
   end
 
   def new

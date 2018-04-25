@@ -1,8 +1,11 @@
 class WorkoutPlansController < ApplicationController
-  before_action :authorize, :except => [:index]
+  # before_action :authorize, :except => [:index]
 
   def index
     @workout_plans = WorkoutPlan.order("score DESC")
+    respond_to do |format|
+      format.json { render :json => @workout_plans }
+    end
   end
 
   def show

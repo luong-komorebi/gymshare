@@ -1,14 +1,15 @@
 class SessionController < ApplicationController
+  skip_before_action :verify_authenticity_token
 
   def new
   end
 
   def create
-    @user = User.find_by_email(params[:signin][:email])
-    if @user && @user.authenticate(params[:signin][:password])
-      session[:user_id] = @user.id
-      flash[:notice] = "You have signed in successfully"
-      redirect_to '/'
+    @user = User.find_by_email(params[:email])
+    if @user && @user.authenticate(params[:password])
+      respond_to do |format|
+        format.json { render :json => @user }
+      end
     else
       flash[:error] = "Wrong log in info"
       redirect_to '/login'
