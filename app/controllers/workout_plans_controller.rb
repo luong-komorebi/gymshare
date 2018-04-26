@@ -1,5 +1,5 @@
 class WorkoutPlansController < ApplicationController
-  # before_action :authorize, :except => [:index]
+  before_action :authorize, :except => [:index]
 
   def index
     @workout_plans = WorkoutPlan.order("score DESC")
@@ -9,9 +9,12 @@ class WorkoutPlansController < ApplicationController
   end
 
   def show
-    @workout_plans = WorkoutPlan.find(params[:id])
+    @workout_plan = WorkoutPlan.find(params[:id])
     @round = Round.new
     @round.workout_plan_id = params[:id]
+    respond_to do |format|
+      format.json { render :json => @workout_plan }
+    end
   end
 
   def new
