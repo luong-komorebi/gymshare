@@ -1,31 +1,48 @@
 class RoundsController < ApplicationController
+  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+  skip_before_action :verify_authenticity_token
+
   def index
-    @rounds = Round.all
+    @rounds = current_workout_plan.rounds
     render :json => @rounds
   end
 
+  def show
+    @round = current_workout_plan.rounds.find(params[:id])
+    render :json => @round
+  end
+
   def create
-    @round = Round.new(round_params)
-    byebug
-    @round.exercises.new(exercise_params[:exercises])
+    @round = current_workout_plan.rounds.build(round_params)
+    @round.exercises.new(exercise_params[:exercise])
     @round.workout_plan_id = params[:workout_plan_id]
-    @round.save
-    redirect_to workout_plan_path(@round.workout_plan)
+    if @round.save
+      render :json => @round
+    else
+      render :json => { :error => @round.errors.full_messages }, :status => 503
+    end
   end
 
   def new
     @round = Round.new
-    byebug
     @round.exercises.build
   end
 
   private
 
   def round_params
-    params.require(:round).permit(:repitition)
+    params.permit(:repitition)
   end
 
   def exercise_params
-    params.require(:round).permit(exercises: [ :name, :description, :weight, :reps ])
+    params.permit(exercise: [ :name, :description, :weight, :reps ])
+  end
+
+  def record_not_found
+    render :json => { :error => "Data Not found!" }, :status => 404
+  end
+
+  def current_workout_plan
+    WorkoutPlan.find(params[:workout_plan_id])
   end
 end

@@ -1,6 +1,6 @@
 class ExercisesController < ApplicationController
   def index
-    @exercises = Exercise.all
+    @exercises = current_round.exercises
     respond_to do |format|
       format.json { render :json => @exercises }
     end
@@ -11,18 +11,22 @@ class ExercisesController < ApplicationController
   end
 
   def create
-    @round = Round.find(params[:round_id])
-    @exercises = @round.exercises.create(exercise_params)
-    redirect_to exercises_path(@round)
+    @exercise = current_round.exercises.build(exercise_params)
+    render :json => @exercise
   end
 
   def show
-    @exercises = Excercise.find(params[:id])
+    @exercise = current_round.find(params[:id])
+    render @exercise
   end
 
   private
 
   def exercise_params
     params.require(:exercise).permit(:name, :description, :weight, :reps)
+  end
+
+  def current_round
+    Round.find(params[:round_id])
   end
 end
