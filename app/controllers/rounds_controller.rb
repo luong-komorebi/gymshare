@@ -13,6 +13,8 @@ class RoundsController < ApplicationController
   end
 
   def create
+    logger.warn round_params
+    logger.warn exercise_params
     @round = current_workout_plan.rounds.build(round_params)
     @round.exercises.new(exercise_params[:exercise])
     @round.workout_plan_id = params[:workout_plan_id]
@@ -26,6 +28,15 @@ class RoundsController < ApplicationController
   def new
     @round = Round.new
     @round.exercises.build
+  end
+
+  def destroy
+    @round = Round.find(params[:id])
+    if @round.destroy
+      render :json => { :message => "Deleted!"}
+    else
+      render :json => { :message => "Round not existed!" }
+    end
   end
 
   private

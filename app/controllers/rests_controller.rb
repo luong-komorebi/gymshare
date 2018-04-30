@@ -7,6 +7,7 @@ class RestsController < ApplicationController
   end
 
   def new
+    @rest = Rest.new
   end
 
   def show
