@@ -12,11 +12,19 @@ class RoundsController < ApplicationController
     render :json => @round
   end
 
+  def update
+    @round = Round.find(params[:id])
+    if @round.update_attributes(round_params)
+      render :json => @round
+    else
+      render :json => { :error => @round.errors.full_messages }, :status => 503
+    end
+  end
+
   def create
-    logger.warn round_params
-    logger.warn exercise_params
     @round = current_workout_plan.rounds.build(round_params)
     @round.exercises.new(exercise_params[:exercise])
+    @round.rests.new(rest_params[:rest])
     @round.workout_plan_id = params[:workout_plan_id]
     if @round.save
       render :json => @round
@@ -47,6 +55,10 @@ class RoundsController < ApplicationController
 
   def exercise_params
     params.permit(exercise: [ :name, :description, :weight, :reps ])
+  end
+
+  def rest_params
+    params.permit(rest: [ :rest_time ])
   end
 
   def record_not_found

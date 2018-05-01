@@ -23,7 +23,7 @@ class ExercisesController < ApplicationController
   private
 
   def exercise_params
-    params.require(:exercise).permit(:name, :description, :weight, :reps)
+    params.permit(:name, :description, :weight, :reps)
   end
 
   def current_round
