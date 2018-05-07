@@ -1,9 +1,7 @@
 require 'telegram/bot'
-require 'byebug'
 
 class Bot::BotServer
-  def self.run_bot_server(rails_logger)
-    byebug
+  def self.run_bot_server(rails_logger=nil)
     token = ENV['TELEGRAM_TOKEN']
     Telegram::Bot::Client.run(token, logger: rails_logger) do |bot|
       bot.listen do |message|
@@ -12,12 +10,10 @@ class Bot::BotServer
           bot.logger.warn "I came callback"
           if message.data == 'best'
             bot.logger.warn "I came"
-            bot.api.send_message(chat_id: message.from.id, text: best_workout, parser: "Markdown")
+            bot.api.send_message(parse_mode: 'Markdown', chat_id: message.from.id, text: best_workout)
           end
         else
           case message.text
-          when '/help'
-            bot.api.send_message(chat_id: message.chat.id, text: "I am here to help you. Type /workout, /myworkout or /createworkout")
           when '/createworkout'
             bot.api.send_message(chat_id: message.chat.id, text: "Sorry this command is yet to be implemented")
           when '/myworkout'
@@ -32,7 +28,7 @@ class Bot::BotServer
             bot.logger.warn "I came workout"
             kb = [
               Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Go to app', url: 'https://google.com'),
-              Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Get me the best workout', callback_data: 'best'),
+              Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Get me one workout', callback_data: 'best'),
               Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Share this app', switch_inline_query: 'Hey have you heard about Gymshare. It\'s awesome dude')
             ]
             markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: kb)
@@ -48,18 +44,18 @@ class Bot::BotServer
   private
 
   def self.best_workout
-    result = "*I got the best workout for you. Let's start*"
     workout_plan = ::WorkoutPlan.first
+    return "No workout plan in database" if !workout_plan
+    result = "*I got the best workout for you. Let's start*"
     rounds = ::Round.where(workout_plan_id: workout_plan.id)
     rounds.each_with_index do |round, round_index|
-      result << "\nRound _#{round_index}_: "
+      result << "\nRound _#{round_index}_ : "
       round.exercises.each_with_index do |exercise, index|
-        result << "\nExercise _#{index}:"\
-          "\n  #{exercise.name} - #{exercise.description}"\
-          "\n  Weight: #{exercise.weight} - Reps: #{exercise.reps}"\
+        result << "\nExercise _#{index}_ :"\
+          "\n  _#{exercise.name}_ - #{exercise.description}"\
+          "\n  Weight: #{exercise.weight} and Reps: #{exercise.reps}"
         if index != round.exercises.length - 1 && round.rests[index] != nil
-          result << "\n  Then rest for #{round.rests[index].rest_time}
-          "
+          result << "\n  Then rest for #{round.rests[index].rest_time}"
         end
       end
     end
