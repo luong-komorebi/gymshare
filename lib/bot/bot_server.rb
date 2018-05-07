@@ -7,19 +7,20 @@ class Bot::BotServer
       bot.listen do |message|
         case message
         when Telegram::Bot::Types::CallbackQuery
-          bot.logger.warn "I came callback"
           if message.data == 'best'
             bot.api.send_message(parse_mode: 'Markdown', chat_id: message.from.id, text: best_workout)
           end
           if message.data == 'yes'
-            bot.logger.warn "I came"
             bot.api.send_message(parse_mode: 'Markdown', chat_id: message.from.id, text: my_workout(@email))
+          end
+          if message.data == 'no'
+            bot.api.send_message(parse_mode: 'Markdown', chat_id: message.from.id, text: "Ok let's insert again")
           end
         else
           case message.text
           when %r(^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$)
             kb = [
-              Telegram::Bot::Types::InlineKeyboardButton.new(text: 'No let me insert again', url: 'https://google.com'),
+              Telegram::Bot::Types::InlineKeyboardButton.new(text: 'No let me insert again', callback_data: 'no'),
               Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Sure', callback_data: 'yes')
             ]
             @email = message.text
@@ -74,11 +75,11 @@ class Bot::BotServer
 
   def self.my_workout(email)
     user = ::User.where(email: email)
-    return "No user found with that email" if !user
+    return "No user found with that email" if user.empty?
 
     offset = rand(::WorkoutPlan.where(user: user).count)
     workout_plan = ::WorkoutPlan.where(user: user).offset(offset).first
-    return "No workout plan in database" if !workout_plan
+    return "No workout plan in database" if workout_plan.empty?
 
     result = "*I got the best workout for you. Let's start*"
     rounds = ::Round.where(workout_plan_id: workout_plan.id)
