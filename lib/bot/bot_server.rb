@@ -56,14 +56,14 @@ class Bot::BotServer
 
   def self.best_workout
     workout_plan = ::WorkoutPlan.first
-    return "No workout plan in database" if workout_plan.empty?
+    return "No workout plan in database" if !workout_plan
     result = "*I got the best workout for you. Let's start*"
     rounds = ::Round.where(workout_plan_id: workout_plan.id)
     rounds.each_with_index do |round, round_index|
       result << "\nRound _#{round_index}_ : "
       round.exercises.each_with_index do |exercise, index|
         result << "\nExercise _#{index}_ :"\
-          "\n  *#{exercise.name}* - #{exercise.description}"\
+          "\n  *#{exercise.name}*: #{exercise.description}"\
           "\n  Weight: #{exercise.weight} kilogram and Reps: #{exercise.reps}"
         if index != round.exercises.length - 1 && round.rests[index] != nil
           result << "\n  Then rest for #{round.rests[index].rest_time} minutes"
@@ -79,7 +79,7 @@ class Bot::BotServer
 
     offset = rand(::WorkoutPlan.where(user: user).count)
     workout_plan = ::WorkoutPlan.where(user: user).offset(offset).first
-    return "No workout plan in database" if workout_plan.empty?
+    return "No workout plan in database" if !workout_plan
 
     result = "*I got the best workout for you. Let's start*"
     rounds = ::Round.where(workout_plan_id: workout_plan.id)
@@ -87,7 +87,7 @@ class Bot::BotServer
       result << "\nRound _#{round_index}_ : "
       round.exercises.each_with_index do |exercise, index|
         result << "\nExercise _#{index}_ :"\
-          "\n  *#{exercise.name}* - #{exercise.description}"\
+          "\n  _#{exercise.name}_ : #{exercise.description}"\
           "\n  Weight: #{exercise.weight} kilogram and Reps: #{exercise.reps}"
         if index != round.exercises.length - 1 && round.rests[index] != nil
           result << "\n  Then rest for #{round.rests[index].rest_time} minutes"
