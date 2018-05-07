@@ -12,7 +12,11 @@ module Gymshare
     config.load_defaults 5.1
 
     config.logger = Logger.new(STDOUT)
-    config.log_level = :warn
+    config.log_level = :info
+    config.autoload_paths << Rails.root.join('lib')
+    config.after_initialize do
+      Thread.new { Bot::BotServer.run_bot_server(config.logger) }
+    end
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
