@@ -86,8 +86,8 @@ class Bot::BotServer
       result << "\nRound _#{round_index}_ : "
       round.exercises.each_with_index do |exercise, index|
         result << "\nExercise _#{index}_ :"\
-          "\n  _#{exercise.name}_ - #{exercise.description}"\
-          "\n  Weight: #{exercise.weight} and Reps: #{exercise.reps}"
+          "\n  *#{exercise.name}* - #{exercise.description}"\
+          "\n  Weight: #{exercise.weight} kilogram and Reps: #{exercise.reps}"
         if index != round.exercises.length - 1 && round.rests[index] != nil
           result << "\n  Then rest for #{round.rests[index].rest_time} minutes"
         end
